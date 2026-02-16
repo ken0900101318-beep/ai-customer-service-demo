@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE桌遊 AI客服系統 - 總部戰情室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .header .time {
+            float: right;
+            color: #999;
+            font-size: 14px;
+            margin-top: -35px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h3 {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .change {
+            font-size: 14px;
+            color: #4caf50;
+        }
+        
+        .stat-card .change.negative {
+            color: #f44336;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .panel h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .store-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .store-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .store-item:hover {
+            background: #e9ecef;
+            cursor: pointer;
+        }
+        
+        .store-info {
+            flex: 1;
+        }
+        
+        .store-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .store-stats {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .status-badge {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-green { background: #4caf50; }
+        .status-yellow { background: #ff9800; }
+        .status-red { background: #f44336; }
+        
+        .btn-enter {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn-enter:hover {
+            background: #5568d3;
+        }
+        
+        .alert-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid #f44336;
+            background: #ffebee;
+        }
+        
+        .alert-item.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        
+        .alert-time {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        
+        .alert-message {
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header .time {
+                float: none;
+                margin-top: 10px;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎲 ONE桌遊 中央管理系統</h1>
+            <div class="subtitle">總部戰情室 - 全台 90 家店即時監控</div>
+            <div class="time" id="currentTime"></div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>今日總訊息量</h3>
+                <div class="value">2,345</div>
+                <div class="change">↑ 12.5% 較昨日</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>AI 成功回覆率</h3>
+                <div class="value">89.9%</div>
+                <div class="change">↑ 2.3% 較昨日</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>平均回應時間</h3>
+                <div class="value">0.8<span style="font-size: 20px;">秒</span></div>
+                <div class="change">↓ 0.2秒 較昨日</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>轉人工處理</h3>
+                <div class="value">237</div>
+                <div class="change negative">↑ 5.2% 較昨日</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2>🏪 門市狀態監控 (90家)</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <span style="margin-right: 20px;">
+                        <span class="status-badge status-green"></span> 正常運作: 85
+                    </span>
+                    <span style="margin-right: 20px;">
+                        <span class="status-badge status-yellow"></span> 需要關注: 3
+                    </span>
+                    <span>
+                        <span class="status-badge status-red"></span> 異常警報: 2
+                    </span>
+                </div>
+                
+                <div class="store-list">
+                    <div class="store-item">
+                        <span class="status-badge status-red"></span>
+                        <div class="store-info">
+                            <div class="store-name">🔴 桃園中壢店</div>
+                            <div class="store-stats">訊息: 0 | AI成功: N/A | 錯誤: LINE Token 過期</div>
+                        </div>
+                        <button class="btn-enter" style="background: #f44336;">立即修復</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-red"></span>
+                        <div class="store-info">
+                            <div class="store-name">🔴 新竹東區店</div>
+                            <div class="store-stats">訊息: 12 | AI成功: 0% | 錯誤: OpenAI API 額度不足</div>
+                        </div>
+                        <button class="btn-enter" style="background: #f44336;">立即修復</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-yellow"></span>
+                        <div class="store-info">
+                            <div class="store-name">🟡 台南永康店</div>
+                            <div class="store-stats">訊息: 589 | AI成功: 45.2% | 警告: 訊息量異常多</div>
+                        </div>
+                        <button class="btn-enter" style="background: #ff9800;">查看詳情</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-green"></span>
+                        <div class="store-info">
+                            <div class="store-name">高雄三民店</div>
+                            <div class="store-stats">訊息: 145 | AI成功: 92.4% | 轉人工: 11</div>
+                        </div>
+                        <button class="btn-enter" onclick="location.href='store-panel.html'">進入管理</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-green"></span>
+                        <div class="store-info">
+                            <div class="store-name">台北松山店</div>
+                            <div class="store-stats">訊息: 98 | AI成功: 88.7% | 轉人工: 9</div>
+                        </div>
+                        <button class="btn-enter">進入管理</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-green"></span>
+                        <div class="store-info">
+                            <div class="store-name">台中西屯店</div>
+                            <div class="store-stats">訊息: 76 | AI成功: 95.1% | 轉人工: 4</div>
+                        </div>
+                        <button class="btn-enter">進入管理</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-green"></span>
+                        <div class="store-info">
+                            <div class="store-name">台北信義店</div>
+                            <div class="store-stats">訊息: 132 | AI成功: 91.2% | 轉人工: 8</div>
+                        </div>
+                        <button class="btn-enter">進入管理</button>
+                    </div>
+                    
+                    <div class="store-item">
+                        <span class="status-badge status-green"></span>
+                        <div class="store-info">
+                            <div class="store-name">桃園藝文店</div>
+                            <div class="store-stats">訊息: 89 | AI成功: 87.6% | 轉人工: 11</div>
+                        </div>
+                        <button class="btn-enter">進入管理</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="panel" style="margin-bottom: 20px;">
+                    <h2>⚠️ 即時警報</h2>
+                    
+                    <div class="alert-item">
+                        <div class="alert-time">2分鐘前</div>
+                        <div class="alert-message"><strong>桃園中壢店</strong> LINE Token 過期，已停止服務</div>
+                    </div>
+                    
+                    <div class="alert-item">
+                        <div class="alert-time">5分鐘前</div>
+                        <div class="alert-message"><strong>新竹東區店</strong> OpenAI API 錯誤 (額度不足)</div>
+                    </div>
+                    
+                    <div class="alert-item warning">
+                        <div class="alert-time">12分鐘前</div>
+                        <div class="alert-message"><strong>台南永康店</strong> 今日訊息異常多 (589則，平均26則)</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2>⚡ 快速操作</h2>
+                    
+                    <div class="quick-actions">
+                        <button class="action-btn">➕ 新增門市</button>
+                        <button class="action-btn">🔄 批量更新</button>
+                        <button class="action-btn">⚙️ 全域設定</button>
+                        <button class="action-btn">📊 查看報表</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-TW', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
