@@ -205,6 +205,158 @@
             font-size: 14px;
         }
         
+        .equipment-icons {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+        
+        .equipment-icons span {
+            margin-right: 8px;
+        }
+        
+        .filter-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: #f0f0ff;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            position: relative;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .equipment-list {
+            margin-top: 20px;
+        }
+        
+        .equipment-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .equipment-item:hover {
+            background: #e9ecef;
+        }
+        
+        .equipment-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .equipment-item label {
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .ai-demo-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .demo-scenario {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .demo-scenario h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .demo-message {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+        
         .room-badge {
             padding: 5px 12px;
             border-radius: 20px;
@@ -475,53 +627,153 @@
                 
                 <button class="btn-primary" style="margin-bottom: 20px;">➕ 新增包廂</button>
                 
-                <div class="room-list">
-                    <div class="room-item">
+                <h3 style="margin: 20px 0 15px 0; color: #667eea;">🔍 設備篩選</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterByEquipment('all')">全部</button>
+                    <button class="filter-btn" onclick="filterByEquipment('tv')">📺 電視</button>
+                    <button class="filter-btn" onclick="filterByEquipment('ps5')">🎮 PS5</button>
+                    <button class="filter-btn" onclick="filterByEquipment('drink')">🥤 飲料機</button>
+                    <button class="filter-btn" onclick="filterByEquipment('water')">💧 飲水機</button>
+                    <button class="filter-btn" onclick="filterByEquipment('fridge')">❄️ 冰箱</button>
+                    <button class="filter-btn" onclick="filterByEquipment('ktv')">🎤 KTV</button>
+                    <button class="filter-btn" onclick="filterByEquipment('audio')">🎵 音響設備</button>
+                </div>
+                
+                <h3 style="margin: 30px 0 15px 0;">包廂列表</h3>
+                
+                <div class="room-list" id="roomList">
+                    <div class="room-item" data-equipment="tv,drink">
                         <div class="room-info">
                             <span class="room-badge badge-small">小包</span>
                             <h4>壹帆風順</h4>
-                            <p>有花：無 | 設備：一般麻將桌</p>
+                            <p>4-6人 | 有花：無 | 設備：一般麻將桌</p>
+                            <div class="equipment-icons">
+                                <span title="電視">📺</span>
+                                <span title="飲料機">🥤</span>
+                            </div>
                         </div>
                         <div>
+                            <button class="btn-secondary" onclick="openEquipmentModal('壹帆風順', ['tv', 'drink'])">⚙️ 設備設定</button>
                             <button class="btn-secondary">編輯</button>
                             <button class="btn-secondary" style="background: #dc3545;">刪除</button>
                         </div>
                     </div>
                     
-                    <div class="room-item">
+                    <div class="room-item" data-equipment="tv,ps5,drink">
                         <div class="room-info">
                             <span class="room-badge badge-small">小包</span>
                             <h4>貳全其美</h4>
-                            <p>有花：無 | 設備：一般麻將桌</p>
+                            <p>4-6人 | 有花：無 | 設備：一般麻將桌</p>
+                            <div class="equipment-icons">
+                                <span title="電視">📺</span>
+                                <span title="PS5">🎮</span>
+                                <span title="飲料機">🥤</span>
+                            </div>
                         </div>
                         <div>
+                            <button class="btn-secondary" onclick="openEquipmentModal('貳全其美', ['tv', 'ps5', 'drink'])">⚙️ 設備設定</button>
                             <button class="btn-secondary">編輯</button>
                             <button class="btn-secondary" style="background: #dc3545;">刪除</button>
                         </div>
                     </div>
                     
-                    <div class="room-item">
+                    <div class="room-item" data-equipment="tv,drink,water">
+                        <div class="room-info">
+                            <span class="room-badge badge-small">小包</span>
+                            <h4>伍福臨門</h4>
+                            <p>4-6人 | 有花：無 | 設備：一般麻將桌</p>
+                            <div class="equipment-icons">
+                                <span title="電視">📺</span>
+                                <span title="飲料機">🥤</span>
+                                <span title="飲水機">💧</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-secondary" onclick="openEquipmentModal('伍福臨門', ['tv', 'drink', 'water'])">⚙️ 設備設定</button>
+                            <button class="btn-secondary">編輯</button>
+                            <button class="btn-secondary" style="background: #dc3545;">刪除</button>
+                        </div>
+                    </div>
+                    
+                    <div class="room-item" data-equipment="tv,ps5,drink,water,fridge">
+                        <div class="room-info">
+                            <span class="room-badge badge-large">大包</span>
+                            <h4>陸六大順</h4>
+                            <p>6-8人 | 有花：無 | 設備：一般麻將桌</p>
+                            <div class="equipment-icons">
+                                <span title="電視">📺</span>
+                                <span title="PS5">🎮</span>
+                                <span title="飲料機">🥤</span>
+                                <span title="飲水機">💧</span>
+                                <span title="冰箱">❄️</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-secondary" onclick="openEquipmentModal('陸六大順', ['tv', 'ps5', 'drink', 'water', 'fridge'])">⚙️ 設備設定</button>
+                            <button class="btn-secondary">編輯</button>
+                            <button class="btn-secondary" style="background: #dc3545;">刪除</button>
+                        </div>
+                    </div>
+                    
+                    <div class="room-item" data-equipment="tv,ps5,drink,ktv,audio">
                         <div class="room-info">
                             <span class="room-badge badge-large">大包</span>
                             <h4>柒星高照</h4>
-                            <p>有花：無 | 設備：一般麻將桌</p>
+                            <p>6-8人 | 有花：無 | 設備：一般麻將桌</p>
+                            <div class="equipment-icons">
+                                <span title="電視">📺</span>
+                                <span title="PS5">🎮</span>
+                                <span title="飲料機">🥤</span>
+                                <span title="KTV">🎤</span>
+                                <span title="音響設備">🎵</span>
+                            </div>
                         </div>
                         <div>
+                            <button class="btn-secondary" onclick="openEquipmentModal('柒星高照', ['tv', 'ps5', 'drink', 'ktv', 'audio'])">⚙️ 設備設定</button>
                             <button class="btn-secondary">編輯</button>
                             <button class="btn-secondary" style="background: #dc3545;">刪除</button>
                         </div>
                     </div>
+                </div>
+                
+                <!-- AI 回覆模擬展示區 -->
+                <div class="ai-demo-section">
+                    <h2 style="margin-bottom: 25px; color: #667eea;">💬 AI 如何根據設備回答客人</h2>
                     
-                    <div class="room-item">
-                        <div class="room-info">
-                            <span class="room-badge badge-vip">VIP</span>
-                            <h4>參陽開泰</h4>
-                            <p>有花：無 | 設備：Switch 遊戲機</p>
-                        </div>
-                        <div>
-                            <button class="btn-secondary">編輯</button>
-                            <button class="btn-secondary" style="background: #dc3545;">刪除</button>
-                        </div>
+                    <div class="demo-scenario">
+                        <h4>情境 1：客人問「有沒有 PS5？」</h4>
+                        <div class="demo-message">有的！以下包廂有 PS5：
+
+🎮 貳全其美（小包廂，4-6人）
+🎮 陸六大順（大包廂，6-8人）
+🎮 柒星高照（大包廂，6-8人）
+
+您想預約哪一間呢？
+🔗 預約網址：https://booking.onegame.tw</div>
+                    </div>
+                    
+                    <div class="demo-scenario">
+                        <h4>情境 2：客人問「哪間包廂有飲料機？」</h4>
+                        <div class="demo-message">所有包廂都有飲料機喔！🥤
+
+小包廂（4-6人）：壹帆風順、貳全其美、伍福臨門
+大包廂（6-8人）：陸六大順、柒星高照
+
+您想預約哪一間呢？</div>
+                    </div>
+                    
+                    <div class="demo-scenario">
+                        <h4>情境 3：客人問「有 KTV 的包廂嗎？」</h4>
+                        <div class="demo-message">有的！柒星高照（大包廂，6-8人）配有 KTV 和音響設備 🎤🎵
+
+這間包廂還有：
+📺 電視
+🎮 PS5
+🥤 飲料機
+
+適合唱歌、打遊戲！
+
+🔗 立即預約：https://booking.onegame.tw</div>
                     </div>
                 </div>
             </div>
@@ -881,7 +1133,61 @@
         </div>
     </div>
     
+    <!-- 設備設定彈出視窗 -->
+    <div id="equipmentModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeEquipmentModal()">&times;</span>
+            <h2 style="margin-bottom: 20px; color: #667eea;">⚙️ 設備設定</h2>
+            <h3 id="modalRoomName" style="margin-bottom: 20px; color: #333;"></h3>
+            
+            <div class="equipment-list">
+                <div class="equipment-item" onclick="toggleEquipment(this, 'tv')">
+                    <input type="checkbox" id="eq-tv">
+                    <label for="eq-tv">📺 電視</label>
+                </div>
+                
+                <div class="equipment-item" onclick="toggleEquipment(this, 'ps5')">
+                    <input type="checkbox" id="eq-ps5">
+                    <label for="eq-ps5">🎮 PS5</label>
+                </div>
+                
+                <div class="equipment-item" onclick="toggleEquipment(this, 'drink')">
+                    <input type="checkbox" id="eq-drink">
+                    <label for="eq-drink">🥤 飲料機</label>
+                </div>
+                
+                <div class="equipment-item" onclick="toggleEquipment(this, 'water')">
+                    <input type="checkbox" id="eq-water">
+                    <label for="eq-water">💧 飲水機</label>
+                </div>
+                
+                <div class="equipment-item" onclick="toggleEquipment(this, 'fridge')">
+                    <input type="checkbox" id="eq-fridge">
+                    <label for="eq-fridge">❄️ 冰箱</label>
+                </div>
+                
+                <div class="equipment-item" onclick="toggleEquipment(this, 'ktv')">
+                    <input type="checkbox" id="eq-ktv">
+                    <label for="eq-ktv">🎤 KTV</label>
+                </div>
+                
+                <div class="equipment-item" onclick="toggleEquipment(this, 'audio')">
+                    <input type="checkbox" id="eq-audio">
+                    <label for="eq-audio">🎵 音響設備</label>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <button class="btn-primary" onclick="saveEquipment()">💾 儲存設定</button>
+                <button class="btn-secondary" onclick="closeEquipmentModal()">取消</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
+        let currentRoomName = '';
+        let currentRoomElement = null;
+        
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             
@@ -934,6 +1240,125 @@
             document.getElementById('eventWeekdayPrice').value = '';
             document.getElementById('eventWeekendPrice').value = '';
             document.getElementById('eventEmoji').value = '';
+        }
+        
+        // 設備設定相關函數
+        const equipmentIcons = {
+            tv: '📺',
+            ps5: '🎮',
+            drink: '🥤',
+            water: '💧',
+            fridge: '❄️',
+            ktv: '🎤',
+            audio: '🎵'
+        };
+        
+        const equipmentNames = {
+            tv: '電視',
+            ps5: 'PS5',
+            drink: '飲料機',
+            water: '飲水機',
+            fridge: '冰箱',
+            ktv: 'KTV',
+            audio: '音響設備'
+        };
+        
+        function openEquipmentModal(roomName, equipment) {
+            currentRoomName = roomName;
+            currentRoomElement = event.target.closest('.room-item');
+            
+            document.getElementById('modalRoomName').textContent = roomName;
+            document.getElementById('equipmentModal').style.display = 'block';
+            
+            // 重置所有勾選框
+            document.querySelectorAll('#equipmentModal input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            // 根據現有設備勾選
+            equipment.forEach(eq => {
+                const checkbox = document.getElementById('eq-' + eq);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+        
+        function closeEquipmentModal() {
+            document.getElementById('equipmentModal').style.display = 'none';
+        }
+        
+        function toggleEquipment(element, equipmentId) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+        }
+        
+        function saveEquipment() {
+            const selectedEquipment = [];
+            const equipmentIconsHtml = [];
+            
+            document.querySelectorAll('#equipmentModal input[type="checkbox"]').forEach(cb => {
+                if (cb.checked) {
+                    const eqId = cb.id.replace('eq-', '');
+                    selectedEquipment.push(eqId);
+                    equipmentIconsHtml.push(`<span title="${equipmentNames[eqId]}">${equipmentIcons[eqId]}</span>`);
+                }
+            });
+            
+            // 更新包廂卡片的設備圖標
+            if (currentRoomElement) {
+                const iconsContainer = currentRoomElement.querySelector('.equipment-icons');
+                if (iconsContainer) {
+                    iconsContainer.innerHTML = equipmentIconsHtml.join('');
+                }
+                
+                // 更新 data-equipment 屬性
+                currentRoomElement.setAttribute('data-equipment', selectedEquipment.join(','));
+                
+                // 更新設備設定按鈕的參數
+                const settingsBtn = currentRoomElement.querySelector('button[onclick^="openEquipmentModal"]');
+                if (settingsBtn) {
+                    settingsBtn.setAttribute('onclick', 
+                        `openEquipmentModal('${currentRoomName}', [${selectedEquipment.map(e => "'" + e + "'").join(', ')}])`
+                    );
+                }
+            }
+            
+            alert('✅ 設備設定已儲存！\n\n' + 
+                  '包廂：' + currentRoomName + '\n' +
+                  '設備：' + (equipmentIconsHtml.length > 0 ? equipmentIconsHtml.join(' ') : '無'));
+            
+            closeEquipmentModal();
+        }
+        
+        // 設備篩選功能
+        function filterByEquipment(equipment) {
+            const rooms = document.querySelectorAll('.room-item');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // 更新按鈕狀態
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 篩選包廂
+            rooms.forEach(room => {
+                if (equipment === 'all') {
+                    room.style.display = 'flex';
+                } else {
+                    const roomEquipment = room.getAttribute('data-equipment') || '';
+                    if (roomEquipment.includes(equipment)) {
+                        room.style.display = 'flex';
+                    } else {
+                        room.style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // 點擊彈出視窗外部關閉
+        window.onclick = function(event) {
+            const modal = document.getElementById('equipmentModal');
+            if (event.target === modal) {
+                closeEquipmentModal();
+            }
         }
     </script>
 </body>
