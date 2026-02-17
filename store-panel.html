@@ -368,6 +368,7 @@
                 <button class="tab-btn" onclick="openTab(event, 'pricing')">💰 價格設定</button>
                 <button class="tab-btn" onclick="openTab(event, 'conversations')">💬 對話記錄</button>
                 <button class="tab-btn" onclick="openTab(event, 'ai-settings')">🤖 AI 設定</button>
+                <button class="tab-btn" onclick="openTab(event, 'events')">🎉 特殊活動設定</button>
             </div>
             
             <div id="dashboard" class="tab-content active">
@@ -736,6 +737,134 @@
                 
                 <button class="btn-primary">儲存設定</button>
             </div>
+            
+            <div id="events" class="tab-content">
+                <h2 style="margin-bottom: 20px;">🎉 特殊活動設定</h2>
+                
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px; color: #667eea;">➕ 新增活動</h3>
+                    
+                    <div class="form-group">
+                        <label>活動名稱</label>
+                        <input type="text" id="eventName" placeholder="例如：聖誕節優惠活動">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>開始時間</label>
+                            <input type="date" id="eventStart">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>結束時間</label>
+                            <input type="date" id="eventEnd">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>平日優惠價（4小時）</label>
+                            <input type="number" id="eventWeekdayPrice" placeholder="150">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>假日優惠價（4小時）</label>
+                            <input type="number" id="eventWeekendPrice" placeholder="200">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>活動標籤 Emoji</label>
+                        <input type="text" id="eventEmoji" placeholder="🎄" maxlength="2" style="width: 100px;">
+                        <small style="color: #999; display: block; margin-top: 5px;">選擇一個代表活動的 emoji</small>
+                    </div>
+                    
+                    <h4 style="margin: 25px 0 15px 0; color: #333;">🤖 AI 推廣選項</h4>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="aiPriceRemind" checked style="width: 20px; height: 20px; margin-right: 10px;">
+                            <span>客人問價格時主動提醒</span>
+                        </label>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="aiBusinessHours" checked style="width: 20px; height: 20px; margin-right: 10px;">
+                            <span>客人問營業時間時順帶告知</span>
+                        </label>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="aiAutoNotify" style="width: 20px; height: 20px; margin-right: 10px;">
+                            <span>客人加好友時自動推播</span>
+                        </label>
+                    </div>
+                    
+                    <div>
+                        <button class="btn-primary" onclick="saveEvent()">💾 儲存活動</button>
+                        <button class="btn-secondary">取消</button>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 30px 0 15px 0;">📋 目前活動</h3>
+                
+                <div id="eventList">
+                    <div class="room-item" style="background: linear-gradient(135deg, #ffe5e5 0%, #fff0f0 100%);">
+                        <div class="room-info">
+                            <span style="font-size: 24px; margin-right: 10px;">🎄</span>
+                            <div>
+                                <h4 style="color: #c62828;">聖誕節優惠活動</h4>
+                                <p style="color: #666;">
+                                    📅 2024-12-24 ~ 2024-12-26 | 
+                                    💰 平日 $150 / 假日 $200 (4小時) | 
+                                    <span style="color: #4caf50; font-weight: bold;">● 進行中</span>
+                                </p>
+                                <p style="color: #999; font-size: 13px; margin-top: 5px;">
+                                    ☑ 價格提醒 ☑ 營業時間告知 ☐ 自動推播
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-secondary">編輯</button>
+                            <button class="btn-secondary" style="background: #dc3545;">刪除</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f3e5f5; padding: 25px; border-radius: 10px; margin-top: 30px; border: 2px solid #7b1fa2;">
+                    <h3 style="margin-bottom: 15px; color: #7b1fa2;">🤖 AI 如何推廣活動？（模擬展示）</h3>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                        <div class="message-label">👤 客戶問價格</div>
+                        <div class="message message-user" style="max-width: 100%; margin-bottom: 15px;">小包4小時多少錢？</div>
+                        
+                        <div class="message-label">🤖 AI 客服回覆</div>
+                        <div class="message message-ai" style="max-width: 100%; background: #f3e5f5;">
+                            小包4小時的價格如下：<br>
+                            • 一般時段：$600<br>
+                            • 白天特價：$500<br><br>
+                            🎄 <strong style="color: #c62828;">聖誕節優惠活動來囉！</strong><br>
+                            12/24-12/26 期間，小包4小時超值優惠：<br>
+                            • 平日只要 <strong>$150</strong><br>
+                            • 假日只要 <strong>$200</strong><br><br>
+                            把握機會來玩喔！🎁
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <div class="message-label">👤 客戶問營業時間</div>
+                        <div class="message message-user" style="max-width: 100%; margin-bottom: 15px;">你們營業到幾點？</div>
+                        
+                        <div class="message-label">🤖 AI 客服回覆</div>
+                        <div class="message message-ai" style="max-width: 100%; background: #f3e5f5;">
+                            我們的營業時間是每天 10:00 - 02:00（凌晨2點）唷！隨時歡迎您來玩 🎲<br><br>
+                            🎄 對了！12/24-12/26 聖誕節期間，小包4小時特價只要 <strong>$150（平日）/$200（假日）</strong>，比平常便宜超多！歡迎來慶祝聖誕 🎁
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -755,6 +884,43 @@
             
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
+        }
+        
+        function saveEvent() {
+            const eventName = document.getElementById('eventName').value;
+            const eventStart = document.getElementById('eventStart').value;
+            const eventEnd = document.getElementById('eventEnd').value;
+            const weekdayPrice = document.getElementById('eventWeekdayPrice').value;
+            const weekendPrice = document.getElementById('eventWeekendPrice').value;
+            const emoji = document.getElementById('eventEmoji').value;
+            
+            if (!eventName || !eventStart || !eventEnd || !weekdayPrice || !weekendPrice) {
+                alert('請填寫所有必填欄位！');
+                return;
+            }
+            
+            const aiPriceRemind = document.getElementById('aiPriceRemind').checked ? '☑' : '☐';
+            const aiBusinessHours = document.getElementById('aiBusinessHours').checked ? '☑' : '☐';
+            const aiAutoNotify = document.getElementById('aiAutoNotify').checked ? '☑' : '☐';
+            
+            // 模擬儲存
+            alert('✅ 活動已儲存！\n\n' + 
+                  '活動名稱：' + eventName + '\n' +
+                  '期間：' + eventStart + ' ~ ' + eventEnd + '\n' +
+                  '平日價格：$' + weekdayPrice + '\n' +
+                  '假日價格：$' + weekendPrice + '\n\n' +
+                  'AI 推廣設定：\n' +
+                  aiPriceRemind + ' 價格提醒\n' +
+                  aiBusinessHours + ' 營業時間告知\n' +
+                  aiAutoNotify + ' 自動推播');
+            
+            // 清空表單
+            document.getElementById('eventName').value = '';
+            document.getElementById('eventStart').value = '';
+            document.getElementById('eventEnd').value = '';
+            document.getElementById('eventWeekdayPrice').value = '';
+            document.getElementById('eventWeekendPrice').value = '';
+            document.getElementById('eventEmoji').value = '';
         }
     </script>
 </body>
